@@ -145,4 +145,14 @@ All colors MUST be HSL for seamless theming.
   .hero-gradient {
     background: var(--gradient-hero);
   }
+  
+  /* Hide Scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

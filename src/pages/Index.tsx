@@ -1,18 +1,21 @@
 import { Header } from '@/components/Header';
-import { HeroSection } from '@/components/HeroSection';
-import { MovieGrid } from '@/components/MovieGrid';
+import { AutoRotatingHero } from '@/components/AutoRotatingHero';
+import { CategorySection } from '@/components/CategorySection';
 import { AnimatedLogo } from '@/components/AnimatedLogo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { demoMovies } from '@/data/movies';
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  const featuredMovie = demoMovies.find(movie => movie.featured) || demoMovies[0];
-  const trendingMovies = demoMovies.filter(movie => movie.trending);
-  const arabicContent = demoMovies.filter(movie => movie.isArabic);
-  const foreignContent = demoMovies.filter(movie => !movie.isArabic);
-  const latestMovies = demoMovies.slice(0, 6);
+  // Organize content like the reference site
+  const featuredMovies = demoMovies.filter(movie => movie.featured || movie.trending);
+  const arabicMovies = demoMovies.filter(movie => movie.isArabic);
+  const foreignMovies = demoMovies.filter(movie => !movie.isArabic);
+  const latestMovies = demoMovies.slice().sort((a, b) => b.year - a.year);
+  const highRatedMovies = demoMovies.filter(movie => movie.rating >= 8.5);
+  const seriesContent = demoMovies.filter(movie => movie.type === 'series');
+  const movieContent = demoMovies.filter(movie => movie.type === 'movie');
 
   return (
     <div className="min-h-screen bg-background">
@@ -22,34 +25,54 @@ const Index = () => {
       {/* Animated Logo Section */}
       <AnimatedLogo />
       
-      {/* Hero Section */}
-      <HeroSection featuredMovie={featuredMovie} />
+      {/* Auto-Rotating Hero Section */}
+      <AutoRotatingHero movies={featuredMovies} />
       
-      {/* Content Sections */}
-      <main className="space-y-12 pb-12">
-        {/* Trending */}
-        <MovieGrid 
-          movies={trendingMovies}
-          title={t('trending')}
-        />
+      {/* Dynamic Content Sections - Organized like ArabSeed */}
+      <main className="space-y-16 pb-16">
         
-        {/* Latest */}
-        <MovieGrid 
-          movies={latestMovies}
+        {/* Latest Releases */}
+        <CategorySection 
           title={t('latest')}
+          movies={latestMovies}
+          filters={['movie', 'series', 'arabic', 'foreign']}
         />
         
         {/* Arabic Content */}
-        <MovieGrid 
-          movies={arabicContent}
-          title={t('arabic')}
+        <CategorySection 
+          title={language === 'ar' ? 'الأفلام العربية' : 'Arabic Movies'}
+          movies={arabicMovies}
+          filters={['Drama', 'Romance', 'Comedy', 'Action']}
         />
         
         {/* Foreign Content */}
-        <MovieGrid 
-          movies={foreignContent}
-          title={t('foreign')}
+        <CategorySection 
+          title={language === 'ar' ? 'الأفلام الأجنبية' : 'Foreign Movies'}
+          movies={foreignMovies}
+          filters={['Action', 'Thriller', 'Sci-Fi', 'Horror']}
         />
+        
+        {/* Top Rated */}
+        <CategorySection 
+          title={language === 'ar' ? 'الأعلى تقييماً' : 'Top Rated'}
+          movies={highRatedMovies}
+          filters={['movie', 'series']}
+        />
+        
+        {/* Series */}
+        <CategorySection 
+          title={language === 'ar' ? 'المسلسلات' : 'TV Series'}
+          movies={seriesContent}
+          filters={['Drama', 'Mystery', 'Romance', 'Historical']}
+        />
+        
+        {/* Movies */}
+        <CategorySection 
+          title={language === 'ar' ? 'الأفلام' : 'Movies'}
+          movies={movieContent}
+          filters={['Action', 'Thriller', 'Drama', 'Sci-Fi']}
+        />
+        
       </main>
     </div>
   );
