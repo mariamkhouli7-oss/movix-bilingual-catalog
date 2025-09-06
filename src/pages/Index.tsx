@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { MovieGrid } from '@/components/MovieGrid';
+import { AnimatedLogo } from '@/components/AnimatedLogo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { demoMovies } from '@/data/movies';
 
@@ -17,6 +18,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <Header />
+      
+      {/* Animated Logo Section */}
+      <AnimatedLogo />
       
       {/* Hero Section */}
       <HeroSection featuredMovie={featuredMovie} />
